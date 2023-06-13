@@ -1,40 +1,21 @@
-from django.conf import settings
+
 from .forms import SignupForm
 
 from django.http import JsonResponse
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 
-
-from rest_framework.response import Response
-
-
-
-
-# @api_view(['GET'])
-# def me(request):
-#     return JsonResponse({
-#         'id': request.user.id,
-#         'name': request.user.name,
-#         'email': request.user.email
-#     })
-
-
- 
 
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def me(request):
-    data = {
+    return JsonResponse({
         'id': request.user.id,
-        'username': request.user.name,
-        'email': request.user.email,
-    }
-    return Response(data)
+        'name': request.user.name,
+        'email': request.user.email
+    })
+
+
 
 @api_view(['POST'])
 @authentication_classes([])

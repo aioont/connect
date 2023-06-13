@@ -48,7 +48,6 @@ export const useUserStore = defineStore({
             localStorage.setItem('user.refresh', data.refresh)
 
             console.log('user.access: ', localStorage.getItem('user.access'))
-
         },
 
         removeToken() {
@@ -71,42 +70,36 @@ export const useUserStore = defineStore({
 
       setUserInfo(user) {
         console.log('setUserInfo', user)
-    
-        const { id, name, email } = user
-    
-        this.user.id = id
-        this.user.name = name
-        this.user.email = email
-  
-    
-    
-        localStorage.setItem('user.id', id)
-        localStorage.setItem('user.name', name)
-        localStorage.setItem('user.email', email)
 
+        this.user.id = user.id
+        this.user.name = user.name
+        this.user.email = user.email
+    
 
+        localStorage.setItem('user.id', this.user.id)
+        localStorage.setItem('user.name', this.user.name)
+        localStorage.setItem('user.email', this.user.email)
 
-        console.log('Moving user hihi : ', localStorage.getItem('user.access'))
-  
 
         console.log('User', this.user)
     },
-    
 
-    async refreshToken() {
-      try {
-          const response = await axios.post('/api/refresh/', {
-              refresh: this.user.refresh
-          })
-  
-          this.user.access = response.data.access
-          localStorage.setItem('user.access', response.data.access)
-  
-          axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.access
-      } catch (error) {
-          console.log(error)
-          this.removeToken()
-      }
-  },  
-    }
+    refreshToken() {
+        axios.post('/api/refresh/', {
+            refresh: this.user.refresh
+        })
+            .then((response) => {
+                this.user.access = response.data.access
+
+                localStorage.setItem('user.access', response.data.access)
+
+                axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.access
+            })
+            .catch((error)=>{
+                console.log(error)
+
+                this.removeToken()
+            })
+    },
+}
 })

@@ -16,15 +16,17 @@
 
       <div class="col-span-2 space-y-4">
         <div class="bg-white border border-gray-200 rounded-lg">
-          <div class="p-4">
-            <textarea class="p-4 w-full bg-gray-100 rounded-lg" placeholder="What are you thinking about?"></textarea>
-          </div>
+          <form v-on:submit.prevent="submitForm" method="post">
+            <div class="p-4">
+                <textarea v-model="body" class="p-4 w-full bg-gray-100 rounded-lg" placeholder="What are you thinking about?"></textarea>
+            </div>
 
-          <div class="p-4 border-t border-gray-100 flex justify-between">
-            <a href="#" class="inline-block py-2 px-4 bg-gray-600 text-white rounded-lg">Attach image</a>
+            <div class="p-4 border-t border-gray-100 flex justify-between">
+              <a href="#" class="inline-block py-2 px-4 bg-gray-600 text-white rounded-lg">Attach image</a>
 
-            <a href="#" class="inline-block py-2 px-4 bg-purple-600 text-white rounded-lg">Post</a>
-          </div>
+              <button class="inline-block py-2 px-4 bg-purple-600 text-white rounded-lg">Post</button>
+            </div>
+          </form>
         </div>
 
         <div v-for="post in posts" :key="post.id" class="p-4 bg-white border border-gray-200 rounded-lg">
@@ -32,13 +34,18 @@
             <div class="flex items-center space-x-6">
               <img src="https://i.pravatar.cc/300?img=70" class="w-[40px] rounded-full">
 
-              <p><strong>Code With Stein</strong></p>
+              <p><strong> {{ post.created_by.name }} </strong></p>
             </div>
 
-            <p class="text-gray-600">18 minutes ago</p>
+            <p class="text-gray-600"> {{ post.created_at_formatted }}</p>
           </div>
 
           <img src="https://images.unsplash.com/photo-1661956602868-6ae368943878?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80" class="w-full rounded-lg">
+           
+          <p class="py-2">{{ post.body }}</p>
+          
+
+
 
           <div class="my-6 flex justify-between">
             <div class="flex space-x-6">
@@ -88,6 +95,7 @@ export default {
   data() {
     return {
       posts: [],
+      body: '',
     };
   },
   mounted() {
@@ -102,12 +110,29 @@ export default {
           this.posts = response.data;
         })
         .catch(error => {
-          console.log('Error:', error);
+          console.log('Error in api post:', error);
         });
     },
     deletePost(id) {
       this.posts = this.posts.filter(post => post.id !== id);
     },
+
+    submitForm() {
+        console.log('submitForm', this.body)
+
+        axios
+            .post('/api/posts/create/', {
+              'body': this.body
+            })
+            .then(response => {
+                console.log('data', response.data)
+                this.posts.unshift(response.data)
+                this.body = ''
+            })
+            .catch(error => {
+                console.log('error', error)
+            })
+    }
   },
 };
 </script>
