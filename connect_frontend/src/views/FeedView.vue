@@ -1,20 +1,9 @@
 <template>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <div class="col-span-1">
-        <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
-          <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full">
+      
 
-          <p><strong>Code With Stein</strong></p>
-
-          <div class="mt-6 flex space-x-8 justify-around">
-            <p class="text-xs text-gray-500">182 friends</p>
-            <p class="text-xs text-gray-500">120 posts</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-span-2 space-y-4">
+      <div class="main-center col-span-3 space-y-4">
         <div class="bg-white border border-gray-200 rounded-lg">
           <form v-on:submit.prevent="submitForm" method="post">
             <div class="p-4">
@@ -29,20 +18,12 @@
           </form>
         </div>
 
-        <div v-for="post in posts" :key="post.id" class="p-4 bg-white border border-gray-200 rounded-lg">
-          <div class="mb-6 flex items-center justify-between">
-            <div class="flex items-center space-x-6">
-              <img src="https://i.pravatar.cc/300?img=70" class="w-[40px] rounded-full">
-
-              <p><strong> {{ post.created_by.name }} </strong></p>
-            </div>
-
-            <p class="text-gray-600"> {{ post.created_at_formatted }}</p>
-          </div>
-
-          <img src="https://images.unsplash.com/photo-1661956602868-6ae368943878?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80" class="w-full rounded-lg">
-           
-          <p class="py-2">{{ post.body }}</p>
+        <div 
+            v-for="post in posts" 
+            v-bind:key="post.id" 
+            class="p-4 bg-white border border-gray-200 rounded-lg"
+        >
+           <FeedItem v-bind:post="post" />
           
 
 
@@ -85,12 +66,14 @@
 import axios from 'axios';
 import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
 import Trends from '../components/Trends.vue';
+import FeedItem from '../components/FeedItem.vue';
 
 export default {
   name: 'FeedView',
   components: {
     PeopleYouMayKnow,
     Trends,
+    FeedItem,
   },
   data() {
     return {

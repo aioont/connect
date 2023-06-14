@@ -32,13 +32,15 @@
                   </RouterLink>
               </div>
 
+
               <div class="menu-right">
                 <template v-if="userStore.user.isAuthenticated">
-                    <a href="https://avatars.githubusercontent.com/u/97335084?s=400&u=f112897c19af72982442150ad19c43c9c3cf2f1d&v=4">
+                    <RouterLink :to="{name: 'profile', params: {'id': userStore.user.id}}">
                         <img src="https://avatars.githubusercontent.com/u/97335084?s=400&u=f112897c19af72982442150ad19c43c9c3cf2f1d&v=4" class="w-12 rounded-full">
-                    </a>
+                    </RouterLink>
                 </template>
  
+
                   <template v-else>
                       <RouterLink to="/login/" class="mr-4 py-4 px-6 bg-gray-600 text-white rounded-lg">Log in</RouterLink>
                       <RouterLink to="/signup/" class="py-4 px-6 bg-purple-600 text-white rounded-lg">Sign up</RouterLink>
