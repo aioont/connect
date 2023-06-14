@@ -116,8 +116,7 @@
             immediate: true
         }
     },
-    
-    methods: {
+        methods: {
       getFeed() {
         axios
           .get(`/api/posts/profile/${this.$route.params.id}/`)
