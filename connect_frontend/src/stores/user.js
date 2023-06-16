@@ -1,20 +1,20 @@
-import { defineStore } from 'pinia'
-import axios from 'axios'
+import { defineStore } from 'pinia';
+import axios from "axios";
+
+
 
 export const useUserStore = defineStore({
-    id: 'user',
-
-    state: () => ({
-        user: {
-            isAuthenticated: false,
-            id: null,
-            name: null,
-            email: null,
-            access: null,
-            refresh: null,
-    
-        }
-    }),
+  id: 'user',
+  state: () => ({
+    user: {
+      isAuthenticated: false,
+      id: null,
+      name: null,
+      email: null,
+      access: null,
+      refresh: null,
+    },
+  }),
 
     actions: {
         initStore() {
@@ -101,5 +101,6 @@ export const useUserStore = defineStore({
                 this.removeToken()
             })
     },
-}
-})
+
+},
+});
