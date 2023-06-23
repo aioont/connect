@@ -32,7 +32,6 @@ def handle_request(request, pk, status):
 def friends(request, pk):
     user = User.objects.get(pk=pk)
     requests = []
-    print("User : ", user)
 
     if user == request.user:
         requests = FriendshipRequest.objects.filter(connect_with=request.user, status=FriendshipRequest.SEND)
@@ -103,7 +102,7 @@ def signup(request):
 
     print(message)
 
-    return JsonResponse({'status': message})
+    return JsonResponse({'status': message}, safe=False)
 
 
 

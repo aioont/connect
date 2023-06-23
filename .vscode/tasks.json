@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "preview",
+			"path": "connect_frontend",
+			"problemMatcher": [],
+			"label": "npm: preview - connect_frontend",
+			"detail": "vite preview"
+		}
+	]
+}

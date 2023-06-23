@@ -6,10 +6,12 @@
           <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full">
 
           <p class="font-bold">{{ user.name }}</p>
+          <br>
+          <p class="font-bold">{{ user.id }}</p>
 
           <div class="mt-6 flex space-x-8 justify-around">
             <RouterLink :to="{ name: 'friends', params: { id: user.id } }" class="text-xs text-gray-500">{{ user.friends_count }} friends</RouterLink>
-            <p class="text-xs text-gray-500">120 posts</p>
+            <p class="text-xs text-gray-500">{{ user.posts_count }} posts</p>
           </div>
 
           <div class="mt-6" v-if="userStore.user.id !== user.id">
@@ -78,7 +80,7 @@ export default {
     return {
       posts: [],
       user: {
-        id: null
+        id: ''
       },
       body: '',
     };

@@ -54,13 +54,16 @@
 <script>
 import axios from 'axios'
 import { useToastStore } from '@/stores/toast'
+import { useRouter } from 'vue-router'
 
 export default {
   setup() {
     const toastStore = useToastStore()
+    const router = useRouter()
 
     return {
-      toastStore
+      toastStore,
+      router
     }
   },
 
@@ -109,6 +112,9 @@ export default {
               this.form.email = ''
               this.form.password1 = ''
               this.form.password2 = ''
+
+              this.$router.push('/login')
+              
             } else {
               // Clear errors array before pushing new errors
               this.errors = []

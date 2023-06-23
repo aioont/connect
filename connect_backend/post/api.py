@@ -39,7 +39,7 @@ def post_detail(request, pk):
 @api_view(['GET'])
 def post_list_profile(request, id):
     user = User.objects.get(pk=id)
-    posts = Post.objects.filter(created_by=id)
+    posts = Post.objects.filter(created_by_id=id)
 
     posts_serializer = PostSerializer(posts, many=True)
     user_serializer = UserSerializer(user)
@@ -93,7 +93,7 @@ def post_create_comment(request, pk):
     post.save()
 
     serializer = CommentSerializer(comment)
-    
+
     return JsonResponse(serializer.data, safe=False)
 
 
