@@ -4,22 +4,27 @@
             <div class="p-4 bg-white border border-gray-200 rounded-lg">
                 <div class="space-y-4">
                     <div 
-                        class="flex items-center justify-between"
+                        class="block items-center justify-between"
                         v-for="conversation in conversations"
                         v-bind:key="conversation.id"
                         v-on:click="setActiveConversation(conversation.id)"
                     >
+                        <h3>Chat with ...</h3>
+                        <br>
+
                         <div class="flex items-center space-x-2">
                             <template
                                 v-for="user in conversation.users"
                                 v-bind:key="user.id"
                             >
-                                <img :src="user.get_avatar" class="w-[40px] rounded-full">
-
+                                
+                                
                                 <p 
                                     class="text-xs font-bold"
-                                    v-if="user.id === userStore.user.id"
-                                >{{ user.name }}</p>
+                                    v-if="user.id !== userStore.user.id"
+                                >{{ user.name }} aaa</p>
+                                <img src="https://i.pravatar.cc/50?img=70" class="mb-6 rounded-full">
+
                             </template>
                         </div>
 
@@ -36,6 +41,7 @@
                         v-for="message in activeConversation.messages"
                         v-bind:key="message.id"
                     >
+                    <div v-if="message">
                         <div 
                             class="flex w-full mt-2 space-x-3 max-w-md ml-auto justify-end"
                             v-if="message.created_by.id == userStore.user.id"
@@ -43,11 +49,13 @@
                             <div>
                                 <div class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
                                     <p class="text-sm">{{ message.body }}</p>
+                                    
                                 </div>
                                 <span class="text-xs text-gray-500 leading-none">{{ message.created_at_formatted }} ago</span>
                             </div>
                             <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                                 <img :src="message.created_by.get_avatar" class="w-[40px] rounded-full">
+                                <small class="text-black font-bold">{{ message.created_by.name }}</small>
                             </div>
                         </div>
 
@@ -57,6 +65,7 @@
                         >
                             <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                                 <img :src="message.created_by.get_avatar" class="w-[40px] rounded-full">
+                                <small class="text-red-400 font-bold">{{ message.created_by.name }}</small>
                             </div>
                             <div>
                                 <div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
@@ -65,6 +74,10 @@
                                 <span class="text-xs text-gray-500 leading-none">{{ message.created_at_formatted }} ago</span>
                             </div>
                         </div>
+                     </div>
+                    <div v-else>
+                            <h1>No conversation yet. Start conversation now ! </h1>
+                    </div>
                     </template>
                 </div>
             </div>
@@ -116,41 +129,52 @@ export default {
             console.log('setActiveConversation', id)
 
             this.activeConversation = id
+
+            console.log("setActiveConversation activeConversation = ", this.activeConversation);
+
+
             this.getMessages()
         },
         getConversations() {
-            console.log('getConversations')
+            console.log('getConversations');
 
             axios
                 .get('/api/chat/')
                 .then(response => {
-                    console.log(response.data)
+                    console.log("getConversations /api/chat/ = ", response.data)
 
                     this.conversations = response.data
 
                     if (this.conversations.length) {
-                        this.activeConversation = this.conversations[0].id
-                    }
+                        
+                        console.log("this.conversations[0].id = ", this.conversations[0].id)
+                        
+                        this.activeConversation = this.conversations[0].id;
+                        
 
+                        console.log("this.activeConversation = ", this.activeConversation)
+                    }
+                    else
+                    {
+                        console.log("Failed to assign activeConversion")
+                    }
                     this.getMessages()
                 })
                 .catch(error => {
-                    console.log(error)
+                    console.log("Error /api/chat/ : ", error)
                 })
         },
 
         getMessages() {
-            console.log('getMessages')
-
             axios
                 .get(`/api/chat/${this.activeConversation}/`)
                 .then(response => {
-                    console.log(response.data)
+                    console.log("getMessages /api/chat/${this.activeConversation}/ = ", response.data)
 
                     this.activeConversation = response.data
                 })
                 .catch(error => {
-                    console.log(error)
+                    console.log("Error /api/chat/${this.activeConversation}/ : ", error)
                 })
         },
 
