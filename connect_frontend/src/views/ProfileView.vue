@@ -52,15 +52,16 @@
       </div>
 
       <div class="main-center col-span-2 space-y-4">
-          <div 
-              class="bg-white border border-gray-200 rounded-lg"
-              v-if="userStore.user.id === user.id"
-          >
-              <FeedForm 
-                  v-bind:user="user" 
-                  v-bind:posts="posts"
-              />
-          </div>
+            <div 
+                    class="bg-white border border-gray-200 rounded-lg"
+                    v-if="userStore.user.id === user.id"
+                >
+                <FeedForm 
+                    v-bind:user="user" 
+                    v-bind:posts="posts"
+                />
+            </div>
+
 
           <div 
               class="p-4 bg-white border border-gray-200 rounded-lg"

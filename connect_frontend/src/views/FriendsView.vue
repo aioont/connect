@@ -51,6 +51,8 @@
                 class="p-4 bg-white border border-gray-200 rounded-lg grid grid-cols-2 gap-4"
                 v-if="friends.length"
             >
+            <h2 class="mb-6 text-xl">My friends</h2> <br>
+
                 <div 
                     class="p-4 text-center bg-gray-100 rounded-lg"
                     v-for="user in friends"
@@ -113,13 +115,14 @@ export default {
             axios
                 .get(`/api/friends/${this.$route.params.id}/`)
                 .then(response => {
-                    console.log('data', response.data)
+                    console.log('Data in api/friends/params : ', response.data)
                     this.friendshipRequests = response.data.requests
+                    console.log("Friendship req data : ",response.data.requests)
                     this.friends = response.data.friends
                     this.user = response.data.user
                 })
                 .catch(error => {
-                    console.log('error', error)
+                    console.log('Error in friends or friendship requests : ', error)
                 })
         },
         handleRequest(status, pk) {
@@ -127,10 +130,10 @@ export default {
             axios
                 .post(`/api/friends/${pk}/${status}/`)
                 .then(response => {
-                    console.log('data', response.data)
+                    console.log('Request has replied : ', response.data)
                 })
                 .catch(error => {
-                    console.log('error', error)
+                    console.log('Error in replying the request : ', error)
                 })
         }
     }

@@ -22,7 +22,7 @@
                                 <p 
                                     class="text-xs font-bold"
                                     v-if="user.id !== userStore.user.id"
-                                >{{ user.name }} aaa</p>
+                                >{{ user.name }}</p>
                                 <img src="https://i.pravatar.cc/50?img=70" class="mb-6 rounded-full">
 
                             </template>

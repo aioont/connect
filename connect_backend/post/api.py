@@ -6,11 +6,16 @@ from rest_framework.permissions import IsAuthenticated
 from account.models import User
 from account.serializers import UserSerializer
 
-from .models import Post, Like, Comment
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer
+from .models import Post, Like, Comment, Trend
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer
 
 from .forms import PostForm
 
+
+@api_view(['GET'])
+def get_trends(request):
+    serializer = TrendSerializer(Trend.objects.all(), many=True)
+    return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
 def post_list(request):
@@ -19,8 +24,11 @@ def post_list(request):
     for user in request.user.friends.all():
         user_ids.append(user.id)
 
-
     posts = Post.objects.filter(created_by__in=list(user_ids))
+
+    trend = request.GET.get('trend', '')
+    if trend:
+        posts = posts.filter(body__icontains=trend)
 
     serializer = PostSerializer(posts, many=True)
     return JsonResponse(serializer.data, safe=False)
@@ -60,6 +68,10 @@ def post_create(request):
         post = form.save(commit=False)
         post.created_by = request.user
         post.save()
+
+        user = request.user
+        user.posts_count = user.posts_count + 1
+        user.save()
 
         serializer = PostSerializer(post)
 

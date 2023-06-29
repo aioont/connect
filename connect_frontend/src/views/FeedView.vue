@@ -6,7 +6,7 @@
         <div class="bg-white border border-gray-200 rounded-lg">
           <form v-on:submit.prevent="submitForm" method="post">
             <div class="p-4">
-                <textarea v-model="body" class="p-4 w-full bg-gray-100 rounded-lg" placeholder="What are you thinking about?"></textarea>
+              <textarea v-model="body" class="p-4 w-full bg-gray-100 rounded-lg" placeholder="What are you thinking about?"></textarea>
             </div>
 
             <div class="p-4 border-t border-gray-100 flex justify-between">
@@ -16,23 +16,19 @@
           </form>
         </div>
 
-        <div 
-            v-for="post in posts" 
-            v-bind:key="post.id" 
-            class="p-4 bg-white border border-gray-200 rounded-lg"
-        >
-           <FeedItem v-bind:post="post" />
-          
+        <div v-for="post in posts" v-bind:key="post.id" class="p-4 bg-white border border-gray-200 rounded-lg">
+          <FeedItem v-bind:post="post" />
         </div>
       </div>
-    </div>
-        <div class="main-right col-span-1 space-y-4">
-            <PeopleYouMayKnow />
 
-            <Trends />
-        </div>
+      <div class="main-right col-span-1 space-y-4">
+        <PeopleYouMayKnow />
+        <Trends />
+      </div>
     </div>
+  </div>
 </template>
+
 
 <script>
 import axios from 'axios';
