@@ -116,28 +116,13 @@ export default {
               this.$router.push('/login')
               
             } else {
-              // Clear errors array before pushing new errors
-              this.errors = []
-
-              // Check if the response data is an object
-              if (typeof response.data === 'object') {
-                for (const key in response.data) {
-                  this.errors.push(response.data[key][0])
+                const data = JSON.parse(response.data.message)
+                for (const key in data){
+                    this.errors.push(data[key][0].message)
                 }
-              } else {
-                try {
-                  const data = JSON.parse(response.data)
-                  for (const key in data) {
-                    this.errors.push(data[key][0])
-                  }
-                } catch (error) {
-                  this.errors.push(response.data)
-                }
-              }
-
-              this.toastStore.showToast(5000, 'Something went wrong. Please try again', 'bg-red-300')
+                this.toastStore.showToast(5000, 'Something went wrong. Please try again', 'bg-red-300')
             }
-          })
+        })
           .catch(error => {
             console.log('Error:', error)
           })

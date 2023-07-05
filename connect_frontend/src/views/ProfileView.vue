@@ -3,8 +3,7 @@
       <div class="main-left col-span-1">
           <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
               <img :src="user.get_avatar" class="mb-6 rounded-full">
-              <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full">
-              
+            
               
               <p><strong>{{ user.name }}</strong></p>
               <br>
@@ -53,9 +52,9 @@
 
       <div class="main-center col-span-2 space-y-4">
             <div 
-                    class="bg-white border border-gray-200 rounded-lg"
-                    v-if="userStore.user.id === user.id"
-                >
+                class="bg-white border border-gray-200 rounded-lg"
+                v-if="userStore.user.id === user.id"
+            >
                 <FeedForm 
                     v-bind:user="user" 
                     v-bind:posts="posts"
@@ -98,7 +97,7 @@ import axios from 'axios'
 import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue'
 import Trends from '../components/Trends.vue'
 import FeedItem from '../components/FeedItem.vue'
-
+import FeedForm from '../components/FeedForm.vue'
 import { useUserStore } from '@/stores/user'
 import { useToastStore } from '@/stores/toast'
 
@@ -119,6 +118,7 @@ export default {
       PeopleYouMayKnow,
       Trends,
       FeedItem,
+      FeedForm
    
   },
 

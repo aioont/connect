@@ -1,3 +1,5 @@
+from django.contrib.auth.forms import PasswordChangeForm
+
 from django.http import JsonResponse
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -9,8 +11,17 @@ from .models import User, FriendshipRequest
 from .serializers import UserSerializer, FriendshipRequestSerializer
 
 
+@api_view(['POST'])
+def editpassword(request):
+    user = request.user
+    
+    form = PasswordChangeForm(data=request.POST, user=user)
+    if form.is_valid():
+        form.save()
 
-
+        return JsonResponse({'message': 'success'})    
+    else:
+        return JsonResponse({'message': form.errors.as_json()}, safe=False)
 
 @api_view(['POST'])
 def editprofile(request):
@@ -100,7 +111,8 @@ def me(request):
     return JsonResponse({
         'id': request.user.id,
         'name': request.user.name,
-        'email': request.user.email
+        'email': request.user.email,
+        'avatar': request.user.get_avatar()
     })
 
 
@@ -122,11 +134,12 @@ def signup(request):
     if form.is_valid():
         user = form.save()
     else:
-        message = 'Error occured due to form invalid'
-
+        message = form.errors.as_json()
+    
     print(message)
 
-    return JsonResponse({'status': message}, safe=False)
+    return JsonResponse({'message': message}, safe=False)
+        
 
 
 

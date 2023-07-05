@@ -36,7 +36,6 @@
             <template v-if="userStore.user.isAuthenticated && userStore.user.id">
               <RouterLink :to="{name: 'profile', params:{'id': userStore.user.id}}" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <img :src="userStore.user.avatar" class="w-12 rounded-full">
-                <img src="https://i.pravatar.cc/50?img=70" class="mb-6 rounded-full">
               </RouterLink>
   
               <RouterLink @click="logout" to="/login/" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

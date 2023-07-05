@@ -4,25 +4,34 @@
             <div class="p-12 bg-white border border-gray-200 rounded-lg">
                 <h1 class="mb-6 text-2xl">Edit profile</h1>
                 <p> Here you can edit your name and email addresss associated with this account !</p>
-                
+
+                <RouterLink to="/profile/edit/password" class="underline mt-6">Edit password</RouterLink>                
+
             </div>
         <div class="main-right py-6">
             <div class="p-12 bg-white border border-gray-200 rounded-lg">
                 <form class="space-y-6" v-on:submit.prevent="submitForm">
                     <div>
-                        <label>Name</label><br>
+                        <label class="text-lg font-medium">Name</label><br>
                         <input type="text" v-model="form.name" placeholder="Your full name" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
                     </div>
 
                     <div>
-                        <label>E-mail</label><br>
+                        <label class="text-lg font-medium">E-mail</label><br>
                         <input type="email" v-model="form.email" placeholder="Your e-mail address" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
                     </div>
 
-                    <div>
-                        <label>Profile picture</label><br>
-                        <input type="file" ref="file">
+                    <div class="flex-col items-center justify-center">
+                        <label for="file" class="mt-2 mb-2 text-lg font-medium">Choose Profile Picture</label>
+                        <div class="relative mt-2">
+                            <input type="file" ref="file" id="file" name="profile-picture">
+                            <label for="file" class="flex items-center justify-center w-48 h-12 px-4 py-2 text-white transition-colors duration-300 ease-in-out bg-blue-500 rounded-md cursor-pointer hover:bg-blue-600">
+                                Select
+                            </label>
+                        </div>
                     </div>
+
+
 
                     <template v-if="errors.length > 0">
                         <div class="bg-red-300 text-white rounded-lg p-6">
@@ -30,9 +39,10 @@
                         </div>
                     </template>
 
-                    <div>
+                    <div class="flex justify-center">
                         <button class="py-4 px-6 bg-purple-600 text-white rounded-lg">Save changes</button>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -48,15 +58,13 @@ import { useUserStore } from '@/stores/user'
 
 export default {
     setup() {
-        const toastStore = useToastStore()
-        const userStore = useUserStore()
-
+        const toastStore = useToastStore();
+        const userStore = useUserStore();
         return {
             toastStore,
             userStore
-        }
+        };
     },
-
     data() {
         return {
             form: {
@@ -64,54 +72,49 @@ export default {
                 name: this.userStore.user.name
             },
             errors: [],
+        };
+    },
+    methods: {
+        submitForm() {
+            this.errors = [];
+            if (this.form.email === "") {
+                this.errors.push("Your e-mail is missing");
+            }
+            if (this.form.name === "") {
+                this.errors.push("Your name is missing");
+            }
+            if (this.errors.length === 0) {
+                let formData = new FormData();
+                formData.append("avatar", this.$refs.file.files[0]);
+                formData.append("name", this.form.name);
+                formData.append("email", this.form.email);
+                axios
+                    .post("/api/editprofile/", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    }
+                })
+                    .then(response => {
+                    if (response.data.message === "Information updated") {
+                        this.toastStore.showToast(5000, "The information was saved", "bg-emerald-500");
+                        this.userStore.setUserInfo({
+                            id: this.userStore.user.id,
+                            name: this.form.name,
+                            email: this.form.email,
+                            avatar: response.data.user.get_avatar
+                        });
+                        this.$router.back();
+                    }
+                    else {
+                        this.toastStore.showToast(5000, `${response.data.message}. Please try again`, "bg-red-300");
+                    }
+                })
+                    .catch(error => {
+                    console.log("error", error);
+                });
+            }
         }
     },
 
-    methods: {
-        submitForm() {
-            this.errors = []
-
-            if (this.form.email === '') {
-                this.errors.push('Your e-mail is missing')
-            }
-
-            if (this.form.name === '') {
-                this.errors.push('Your name is missing')
-            }
-
-            if (this.errors.length === 0) {
-                let formData = new FormData()
-                formData.append('avatar', this.$refs.file.files[0])
-                formData.append('name', this.form.name)
-                formData.append('email', this.form.email)
-
-                axios
-                    .post('/api/editprofile/', formData, {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        }
-                    })
-                    .then(response => {
-                        if (response.data.message === 'Information updated') {
-                            this.toastStore.showToast(5000, 'The information was saved', 'bg-emerald-500')
-
-                            this.userStore.setUserInfo({
-                                id: this.userStore.user.id,
-                                name: this.form.name,
-                                email: this.form.email,
-                                avatar: response.data.user.get_avatar
-                            })
-
-                            this.$router.back()
-                        } else {
-                            this.toastStore.showToast(5000, `${response.data.message}. Please try again`, 'bg-red-300')
-                        }
-                    })
-                    .catch(error => {
-                        console.log('error', error)
-                    })
-            }
-        }
-    }
 }
 </script>
