@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.avatar:
             return 'http://127.0.0.1:8000/' + self.avatar.url
         else:
-            return ''
+            return 'http://127.0.0.1:8000/media/avatars/no_avatar.png'
 
 
 class FriendshipRequest(models.Model):
@@ -80,7 +80,7 @@ class FriendshipRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, related_name='created_friendshiprequests', on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=SEND) # I (default value) point to to first SEND = 'send'
-
+    
 
 
 

@@ -21,6 +21,8 @@ WEBSITE_URL = 'http://127.0.0.1:8000'
 
 AUTH_USER_MODEL = 'account.User'
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=180),

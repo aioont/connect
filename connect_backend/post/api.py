@@ -9,7 +9,7 @@ from account.serializers import UserSerializer
 from .models import Post, Like, Comment, Trend
 from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer
 
-from .forms import PostForm
+from .forms import PostForm, AttachmentForm
 
 
 @api_view(['GET'])
@@ -58,16 +58,28 @@ def post_list_profile(request, id):
     }, safe=False)
 
 
+
+
 @api_view(['POST'])
 def post_create(request):
-    data = request.data
-    
-    form = PostForm(request.data)
+    form = PostForm(request.POST)
+    attachment = None
+    attachment_form = AttachmentForm(request.POST, request.FILES)
+
+    if attachment_form.is_valid():
+        attachment = attachment_form.save(commit=False)
+        attachment.created_by = request.user
+        attachment.save()
 
     if form.is_valid():
         post = form.save(commit=False)
         post.created_by = request.user
         post.save()
+
+        if attachment:
+            print(attachment)
+            post.attachments.add(attachment)
+            
 
         user = request.user
         user.posts_count = user.posts_count + 1

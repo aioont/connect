@@ -14,7 +14,7 @@ class Conversation(models.Model):
     
     def modified_at_formatted(self):
        return timesince(self.created_at)
-
+    
 
 class ConversationMessage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

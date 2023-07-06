@@ -2,18 +2,11 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <div class="main-center col-span-3 space-y-4">
-
         <div class="bg-white border border-gray-200 rounded-lg">
-          <form v-on:submit.prevent="submitForm" method="post">
-            <div class="p-4">
-              <textarea v-model="body" class="p-4 w-full bg-gray-100 rounded-lg" placeholder="What are you thinking about?"></textarea>
-            </div>
-
-            <div class="p-4 border-t border-gray-100 flex justify-between">
-              <a href="#" class="inline-block py-2 px-4 bg-gray-600 text-white rounded-lg">Attach image</a>
-              <button class="inline-block py-2 px-4 bg-purple-600 text-white rounded-lg">Post</button>
-            </div>
-          </form>
+          <FeedForm 
+                      v-bind:user="user" 
+                      v-bind:posts="posts"
+                  />
         </div>
 
         <div v-for="post in posts" v-bind:key="post.id" class="p-4 bg-white border border-gray-200 rounded-lg">
@@ -35,6 +28,7 @@ import axios from 'axios';
 import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
 import Trends from '../components/Trends.vue';
 import FeedItem from '../components/FeedItem.vue';
+import FeedForm from '../components/FeedForm.vue'
 
 export default {
   name: 'FeedView',
@@ -42,6 +36,7 @@ export default {
     PeopleYouMayKnow,
     Trends,
     FeedItem,
+    FeedForm
   },
   data() {
     return {

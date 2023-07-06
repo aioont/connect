@@ -9,6 +9,7 @@ class Like(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_by = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    
 
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -29,12 +30,18 @@ class PostAttachment(models.Model):
     image = models.ImageField(upload_to='post_attachments')
     created_by = models.ForeignKey(User, related_name='post_attachments', on_delete=models.CASCADE)
 
+    def get_image(self):
+        if self.image:
+            return 'http://127.0.0.1:8000/' + self.image.url
+        else:
+            return ''
+       
 
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(blank=True, null=True)
 
-    attachements = models.ManyToManyField(PostAttachment, blank=True)
+    attachments = models.ManyToManyField(PostAttachment, blank=True)
 
     likes = models.ManyToManyField(Like, blank=True)
     likes_count = models.IntegerField(default=0)

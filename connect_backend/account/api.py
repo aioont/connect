@@ -10,6 +10,8 @@ from .models import User, FriendshipRequest
 
 from .serializers import UserSerializer, FriendshipRequestSerializer
 
+from django.core.mail import send_mail
+
 
 @api_view(['POST'])
 def editpassword(request):
@@ -133,6 +135,20 @@ def signup(request):
 
     if form.is_valid():
         user = form.save()
+        user.is_active = False
+        user.save()
+
+        url = f'http://127.0.0.1:8000/activateemail/?email={user.email}&id={user.id}'
+
+        send_mail(
+            "Connect - Please verify your email",
+            f"Verify your account by clicking the url : {url}",
+            "noreply@connect.com",
+            [user.email],
+            fail_silently=False,
+        )
+
+
     else:
         message = form.errors.as_json()
     
