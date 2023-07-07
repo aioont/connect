@@ -5,10 +5,10 @@ from rest_framework.permissions import IsAuthenticated
 
 from account.models import User
 from account.serializers import UserSerializer
+from notification.utils import create_notification
 
 from .models import Post, Like, Comment, Trend
 from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer
-
 from .forms import PostForm, AttachmentForm
 
 
@@ -103,6 +103,10 @@ def post_like(request, pk):
         post.likes_count = post.likes_count + 1
         post.likes.add(like)
         post.save()
+
+        notification = create_notification(request, 'post_like', post_id=post.id)
+        #print('Notification Like : ', notification)
+
         return JsonResponse({'message': 'Liked a post'})
     else:
         return JsonResponse({'message': 'Already liked'})
@@ -115,6 +119,8 @@ def post_create_comment(request, pk):
     post.comments.add(comment)
     post.comments_count = post.comments_count + 1
     post.save()
+
+    notification = create_notification(request, 'post_comment', post_id=post.id)
 
     serializer = CommentSerializer(comment)
 

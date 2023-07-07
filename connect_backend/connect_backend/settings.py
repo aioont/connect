@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'search',
     'chat',
+    'notification'
 ]
 
 

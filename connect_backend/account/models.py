@@ -80,6 +80,9 @@ class FriendshipRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, related_name='created_friendshiprequests', on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=SEND) # I (default value) point to to first SEND = 'send'
+
+    def __str__(self):
+        return self.status
     
 
 

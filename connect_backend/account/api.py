@@ -1,16 +1,15 @@
 from django.contrib.auth.forms import PasswordChangeForm
-
 from django.http import JsonResponse
-
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from .forms import SignupForm, ProfileEditForm
-
 from .models import User, FriendshipRequest
-
 from .serializers import UserSerializer, FriendshipRequestSerializer
+from notification.utils import create_notification
 
 from django.core.mail import send_mail
+
+
 
 
 @api_view(['POST'])
@@ -53,13 +52,22 @@ def handle_request(request, pk, status):
     friendship_request.status = status
     friendship_request.save() 
 
-    user.friends.add(request.user)
-    user.friends_count = user.friends_count + 1
-    user.save()
+    if friendship_request.status == 'accepted':
+        user.friends.add(request.user)
+        user.friends_count = user.friends_count + 1
+        user.save()
 
-    request_user = request.user
-    request_user.friends_count = request_user.friends_count + 1
-    request_user.save()
+        request_user = request.user
+        request_user.friends_count = request_user.friends_count + 1
+        request_user.save()
+
+        notification = create_notification(request, 'accepted_friendrequest', friendrequest_id=friendship_request.id)
+    else:
+        notification = create_notification(request, 'rejected_friendrequest', friendrequest_id=friendship_request.id)
+
+    
+
+    
 
     return JsonResponse({'message': 'Friend Reqeust Updated'})
 
@@ -96,11 +104,15 @@ def send_friendship_request(request, pk):
     user = User.objects.get(pk=pk)
 
 
-    all_friends1 = FriendshipRequest.objects.filter(connect_with=request.user).filter(created_by=user)
+    all_friends1 = FriendshipRequest.objects.filter(connect_with=request.user).filter(created_by=user)   
     all_friends2 = FriendshipRequest.objects.filter(connect_with=user).filter(created_by=request.user)
-    
-    if not all_friends1 or not all_friends2:
-        FriendshipRequest.objects.create(connect_with=user, created_by=request.user)
+
+    if not all_friends1 and not all_friends2:
+
+        friendrequest = FriendshipRequest.objects.create(connect_with=user, created_by=request.user)
+        
+        notification = create_notification(request, 'new_friendrequest', friendrequest_id=friendrequest.id)
+        
         return JsonResponse({'message': 'Friend Reqeust Send'})
     else:
         return JsonResponse({'message': 'Friend Reqeust Already Send'})
