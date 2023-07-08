@@ -2,8 +2,9 @@
     <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
         <div class="main-left col-span-1">
             <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
-                <img :src="user.get_avatar" class="mb-6 rounded-full">
-                
+                <div class="flex justify-center">
+                    <img :src="user.get_avatar" class="mb-6 rounded-full ">
+                </div>
                 <p><strong>{{ user.name }}</strong></p>
 
                 <div class="mt-6 flex space-x-8 justify-around">
@@ -58,8 +59,9 @@
                     v-for="user in friends"
                     v-bind:key="user.id"
                 >
+                <div class="flex justify-center">
                     <img :src="user.get_avatar" class="mb-6 rounded-full">
-                
+                </div>
                     <p>
                         <strong>
                             <RouterLink :to="{name: 'profile', params:{'id': user.id}}">{{ user.name }}</RouterLink>

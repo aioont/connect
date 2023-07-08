@@ -3,7 +3,7 @@
       <div class="max-w-7xl mx-auto">
         <div class="flex items-center justify-between">
           <div class="menu-left">
-            <a href="#" class="text-xl">Connect</a>
+            <a href="#" class="text-xl font-bold">Connect</a>
           </div>
   
           <div class="menu-center flex space-x-2 sm:space-x-12" v-if="userStore.user.isAuthenticated">

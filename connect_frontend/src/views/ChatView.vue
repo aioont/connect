@@ -3,7 +3,7 @@
         <div class="main-left col-span-1">
             <div class="p-4 bg-white border border-gray-200 rounded-lg">
                 <div class="space-y-4">
-                    <h3>Chat with ...</h3>
+                    <h3 class="font-bold">Chat with ...</h3>
                     <div class="block items-center justify-between" v-for="conversation in conversations"
                         v-bind:key="conversation.id" v-on:click="setActiveConversation(conversation.id)">
                         <br>
