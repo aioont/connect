@@ -6,10 +6,13 @@ from .forms import SignupForm, ProfileEditForm
 from .models import User, FriendshipRequest
 from .serializers import UserSerializer, FriendshipRequestSerializer
 from notification.utils import create_notification
-
 from django.core.mail import send_mail
 
 
+@api_view(['GET'])
+def my_friendship_suggestions(request):
+    serializer = UserSerializer(request.user.people_you_may_know.all(), many=True)
+    return JsonResponse(serializer.data, safe=False)
 
 
 @api_view(['POST'])

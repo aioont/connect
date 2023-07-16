@@ -13,6 +13,7 @@ urlpatterns = [
     path('editprofile/', api.editprofile, name='editprofile'),
     path('editpassword/', api.editpassword, name='editpassword'),
 
+    path('friends/suggestions/', api.my_friendship_suggestions, name='my_friendship_suggestions'),
     path('friends/<uuid:pk>/', api.friends, name='friends'),
     path('friends/<uuid:pk>/request/', api.send_friendship_request, name='send_friendship_request'),
     path('friends/<uuid:pk>/<str:status>/', api.handle_request, name='handle_request'),
