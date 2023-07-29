@@ -14,7 +14,7 @@
                  <p class="text-gray-600"> {{ comment.created_at_formatted }} ago</p>
            </div>
  
-           <p class="py-2">{{ comment.body }}</p>
+           <p class="py-2 break-words">{{ comment.body }}</p>
 
 
  

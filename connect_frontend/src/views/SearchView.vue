@@ -22,8 +22,9 @@
                     v-for="user in users"
                     v-bind:key="user.id"
                 >
-                <img :src="user.get_avatar" class="mb-6 rounded-full" alt="Profile Picture">
-                
+                <div class="flex justify-center">
+                    <img :src="user.get_avatar" class="mb-6 rounded-full" alt="Profile Picture">
+                </div>
 
                     <p>
                         <strong>
