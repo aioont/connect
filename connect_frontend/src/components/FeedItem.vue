@@ -48,7 +48,7 @@
         </div>
         
         <div>
-            <div>
+            <div @click="toggleExtraModel">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"></path>
                 </svg>
@@ -56,16 +56,70 @@
         </div>   
     </div>  
 
+    <div v-if="showExtraModel">
+        <div class="flex space-x-6 items-center">
+            <div 
+                class="flex items-center space-x-2" 
+                @click="deletePost"
+                v-if="userStore.user.id == post.created_by.id"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash text-red-500" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                </svg> 
+                
+                <span class="text-red-500 text-xs">Delete post </span>
+            </div>
+      
+            <div 
+                class="flex items-center space-x-2" 
+                @click="reportPost"
+                v-if="userStore.user.id != post.created_by.id"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-flag text-orange-500" viewBox="0 0 16 16">
+                    <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001M14 1.221c-.22.078-.48.167-.766.255-.81.252-1.872.523-2.734.523-.886 0-1.592-.286-2.203-.534l-.008-.003C7.662 1.21 7.139 1 6.5 1c-.669 0-1.606.229-2.415.478A21.294 21.294 0 0 0 3 1.845v6.433c.22-.078.48-.167.766-.255C4.576 7.77 5.638 7.5 6.5 7.5c.847 0 1.548.28 2.158.525l.028.01C9.32 8.29 9.86 8.5 10.5 8.5c.668 0 1.606-.229 2.415-.478A21.317 21.317 0 0 0 14 7.655V1.222z"/>
+                </svg>
+                
+                <span class="text-orange-500 text-xs">Report post </span>
+            </div>
+        </div> 
+        
+        
+    </div>
+
     
 </template>
 
 
 <script>
 import axios from 'axios'
-export default (await import('vue')).defineComponent({
+import { RouterLink } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { useToastStore } from '@/stores/toast'
+
+export default {
     props: {
         post: Object
     },
+
+    emits: ['deletePost'],
+
+    setup() {
+        const userStore = useUserStore()
+        const toastStore = useToastStore()
+
+        return {
+            userStore,
+            toastStore
+        }
+    },
+
+    data() {
+        return {
+            showExtraModel: false
+        }
+    },
+
     methods: {
         likePost(id) {
             axios
@@ -80,8 +134,42 @@ export default (await import('vue')).defineComponent({
                     console.log("Error in adding like to post", error);
                 });
         },
+        toggleExtraModel() {
+            this.showExtraModel = !this.showExtraModel
+        },
+        deletePost() {
+            // console.log("Post deleted !", this.post.id)
+
+            this.$emit('deletePost', this.post.id)
+            axios
+                .delete(`/api/posts/${this.post.id}/delete/`)
+                .then(response => {
+                    console.log(response.data);
+                    this.toastStore.showToast(5000, 'The post was deleted', 'bg-emerald-500')
+
+                })
+                .catch(error => {
+                    console.log('Error in deleting post : ', error);
+                })
+        },
+        reportPost() {
+            console.log("Post reported !");
+
+            axios
+                .post(`/api/posts/${this.post.id}/report/`)
+                .then(response => {
+                    console.log(response.data);
+                    this.toastStore.showToast(5000, 'The post was reported', 'bg-emerald-500')
+
+                })
+                .catch(error => {
+                    console.log('Error in deleting post : ', error);
+                })
+
+        }
     },
-})
+    components: { RouterLink }
+}
 
 </script>
 

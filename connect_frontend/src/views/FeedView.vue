@@ -4,13 +4,13 @@
       <div class="main-center col-span-3 space-y-4">
         <div class="bg-white border border-gray-200 rounded-lg">
           <FeedForm 
-                      v-bind:user="user" 
+                      v-bind:user="null" 
                       v-bind:posts="posts"
                   />
         </div>
 
         <div v-for="post in posts" v-bind:key="post.id" class="p-4 bg-white border border-gray-200 rounded-lg">
-          <FeedItem v-bind:post="post" />
+          <FeedItem v-bind:post="post" v-on:deletePost="deletePost" />
         </div>
       </div>
 
